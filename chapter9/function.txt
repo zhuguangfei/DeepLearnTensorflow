@@ -1,0 +1,9 @@
+int转二进制形式：np.unpackbits(int,axis=1)
+矩阵相乘：np.dot(x,y)
+tf.unstack(value, num=None, axis=0, name=’unstack’)
+    以指定的轴axis，将一个维度为R的张量数组转变成一个维度为R-1的张量。即将一组张量以指定的轴，减少一个维度。正好和stack()相反。
+tf.stack(values, axis=0, name=’stack’)
+    以指定的轴axis，将一个维度为R的张量数组转变成一个维度为R+1的张量。即将一组张量以指定的轴，提高一个维度。
+tf.concat(concat_dim, values, name='concat')
+    除去name参数用以指定该操作的name，与方法有关的一共两个参数：
+    第一个参数concat_dim：必须是一个数，表明在哪一维上连接
