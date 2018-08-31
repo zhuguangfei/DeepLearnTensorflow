@@ -14,3 +14,39 @@ Encoder-Decoder框架：
         encoder_inputs:一个形状为[batch_size x input_size]的list
         返回值：outputs和state。outputs为[batch_size,output_size]的张量；state为[batch_size,cell.state_size];
         cell.state_size可以表示一个或者多个子cell的状态，视输入参数cell而定。
+    
+注意力的Seq2Seq：
+    attention_seq2seq:
+        即在生成每个词时，对不同的输入词给予不同的关注权重。在注意力机制下，对于一个输出网络会自动学习与其对应的输入关系权重。
+    模型特点：
+        序列中每个时刻Encoder生成的c，都将要参与Decoder中解码的各个时刻，而不是只参与初始时刻。对于生成的结果节点c，参与到Decoder
+        的每个序列运算都会经过权重w，w就可以以loss的方式通过优化器来调节了，最终会逐渐逼近与它紧密的那个词，这就是注意力的原理。
+        添加Attention注意力机制后，使得Decoder在生成新的TargetSequence时，能得到之前Encoder编码阶段每个字符的隐藏层的信息向量
+        Hidden State，使得新生成的序列的准确性提高。
+    TensorFlow中的attention_seq2seq:
+        tf.contrib.legacy_seq2seq.embedding_attention_seq2seq(encoder_inputs,
+                                                              decoder_inputs,
+                                                              cell,
+                                                              num_encoder_symbols,
+                                                              num_decoder_symbols,
+                                                              embedding_size,
+                                                              num_heads=1,
+                                                              output_projection=None,
+                                                              feed_previous=False,
+                                                              dtype=None,
+                                                              scope=None,
+                                                              initial_state_attention=False)
+    Seq2Seq中桶(bucket)的实现机制：
+        Seq2Seq模型中，输入输出都是可变长的，会给计算带来很大的效率问题。
+        TensorFlow使用桶的概念来权衡这个问题，思想是：
+            初始化几个bucket，对数据预处理，按照每个序列的长短，将放到不同的bucket中，小于bucketsize部分统一补0来完成对齐工作，之后可以进行
+            不同的bucket的批处理计算。
+            model_with_buckets(encoder_inputs,
+                               decoder_inputs,
+                               targets,
+                               weights,
+                               buckets,
+                               seq2seq,
+                               softmax_loss_function=None,
+                               per_example_loss=False,
+                               name=None)

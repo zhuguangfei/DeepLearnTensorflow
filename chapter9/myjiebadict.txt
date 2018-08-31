@@ -1,0 +1,8 @@
+_NUM nz
+_PAD nz
+_GO nz
+_EOS nz
+_UNK nz
+
+
+nz表示不能被分开
